@@ -2,7 +2,7 @@
 
 This Streamlit application leverages OpenAI's GPT models to automatically generate and evaluate code solutions based on user-defined prompts. It supports multiple programming languages and provides detailed explanations, complexity analysis, and interactive testing capabilities.
 
-🔗 **Deployed App:** [Access the live application here]([your-deployment-link](https://interactive-code-generation-phuoeuqtiojx2tnrkkmuev.streamlit.app))
+🔗 **Deployed App:** [https://interactive-code-generation-phuoeuqtiojx2tnrkkmuev.streamlit.app](your-deployment-link)
 
 ---
 
