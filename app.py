@@ -25,16 +25,18 @@ if 'chat_history' not in st.session_state:
 
 chat_input = st.sidebar.text_input("Ask the assistant")
 if st.sidebar.button("Send") and chat_input:
+    messages = st.session_state['chat_history'] + [{"role": "user", "content": chat_input}]
     response = client.chat.completions.create(
         model="gpt-3.5-turbo",
-        messages=st.session_state['chat_history'] + [{"role": "user", "content": chat_input}],
+        messages=messages,
         max_tokens=500
     )
     reply = response.choices[0].message.content
     st.session_state['chat_history'].append({"role": "user", "content": chat_input})
     st.session_state['chat_history'].append({"role": "assistant", "content": reply})
-    for message in st.session_state['chat_history']:
-        st.sidebar.write(f"**{message['role'].capitalize()}**: {message['content']}")
+
+for message in st.session_state['chat_history']:
+    st.sidebar.markdown(f"**{message['role'].capitalize()}**: {message['content']}")
 
 # Main Inputs
 prompt = st.text_area("Enter your code prompt:", height=120)
@@ -45,9 +47,7 @@ language = st.selectbox("Select programming language:", [
     "Python", "JavaScript", "Java", "C++", "HTML", "CSS", "SQL", "Go", "Ruby"
 ])
 
-model = st.selectbox("Select GPT Model:", [
-    "gpt-3.5-turbo", "gpt-4"
-])
+model = st.selectbox("Select GPT Model:", ["gpt-3.5-turbo", "gpt-4"])
 
 temperature = st.slider("Creativity (Temperature):", 0.0, 1.0, 0.2)
 max_tokens = st.slider("Max Tokens:", 100, 4000, 1500)
@@ -64,7 +64,7 @@ if 'history' not in st.session_state:
     st.session_state['history'] = []
 
 if st.button("Generate Code"):
-    if prompt.strip() == "":
+    if not prompt.strip():
         st.warning("Please enter a prompt.")
     else:
         with st.spinner("Generating solutions..."):
@@ -84,7 +84,7 @@ if st.button("Generate Code"):
                 response = client.chat.completions.create(
                     model=model,
                     messages=[
-                        {"role": "system", "content": f"You are an expert {language} developer. Provide a {sol.lower()} solution to the user's problem. Include detailed comments and explicitly state the time and space complexity."},
+                        {"role": "system", "content": f"Provide a {sol.lower()} solution in {language} with detailed comments and explicit time and space complexity."},
                         {"role": "user", "content": prompt}
                     ],
                     temperature=temperature,
@@ -94,20 +94,20 @@ if st.button("Generate Code"):
                 results.append((sol, solution_code))
 
             def extract_code(content):
-                code_blocks = re.findall(r"```python\n(.*?)```", content, re.DOTALL)
-                return "\n".join(code_blocks) if code_blocks else content
+                match = re.search(r"```[a-zA-Z]*\n(.*?)```", content, re.DOTALL)
+                return match.group(1) if match else content
 
             for sol_type, content in results:
                 st.subheader(f"{sol_type} Solution")
 
-                code = extract_code(content) if language.lower() == 'python' else content
+                code = extract_code(content)
 
                 if output_format == "Markdown":
-                    st.markdown(code)
+                    st.markdown(f"```{language.lower()}\n{code}\n```")
                 else:
                     st.code(code, language=language.lower())
 
-                complexity_info = re.findall(r"(Time Complexity:.*?Space Complexity:.*?)\n", content, re.DOTALL)
+                complexity_info = re.findall(r"Time Complexity:.*?Space Complexity:.*?(?=\n|$)", content, re.DOTALL)
                 if complexity_info:
                     st.info(complexity_info[0])
 
@@ -115,7 +115,7 @@ if st.button("Generate Code"):
                     with st.expander("Test Outputs"):
                         test_cases = [ex.strip() for ex in examples.split(",")]
                         for idx, test_input in enumerate(test_cases, 1):
-                            test_code = code + f"\n\nprint({test_input})"
+                            test_code = f"{code}\nprint({test_input})"
                             output = io.StringIO()
 
                             def run_code():
