@@ -23,8 +23,8 @@ st.sidebar.title("💬 AI Assistant")
 if 'chat_history' not in st.session_state:
     st.session_state['chat_history'] = []
 
-chat_input = st.sidebar.text_input("Ask the assistant")
-if st.sidebar.button("Send") and chat_input:
+chat_input = st.sidebar.text_input("Ask the assistant", key="chat_input")
+if st.sidebar.button("Send", key="send_button") and chat_input:
     messages = st.session_state['chat_history'] + [{"role": "user", "content": chat_input}]
     response = client.chat.completions.create(
         model="gpt-3.5-turbo",
@@ -39,31 +39,21 @@ for message in st.session_state['chat_history']:
     st.sidebar.markdown(f"**{message['role'].capitalize()}**: {message['content']}")
 
 # Main Inputs
-prompt = st.text_area("Enter your code prompt:", height=120)
-
-category = st.selectbox("Categorize your problem:", ["Algorithms", "Data Structures", "Machine Learning", "Web Development", "Database", "Other"])
-
-language = st.selectbox("Select programming language:", [
-    "Python", "JavaScript", "Java", "C++", "HTML", "CSS", "SQL", "Go", "Ruby"
-])
-
-model = st.selectbox("Select GPT Model:", ["gpt-3.5-turbo", "gpt-4"])
-
-temperature = st.slider("Creativity (Temperature):", 0.0, 1.0, 0.2)
-max_tokens = st.slider("Max Tokens:", 100, 4000, 1500)
-
-explain = st.checkbox("Include detailed explanation with complexity analysis")
-
-examples = st.text_area("Enter test input examples (comma-separated):", height=60)
-
-output_format = st.selectbox("Select output format:", ["Raw", "Markdown"])
-
-execution_timeout = st.slider("Execution Timeout (seconds):", 1, 10, 5)
+prompt = st.text_area("Enter your code prompt:", height=120, key="prompt")
+category = st.selectbox("Categorize your problem:", ["Algorithms", "Data Structures", "Machine Learning", "Web Development", "Database", "Other"], key="category")
+language = st.selectbox("Select programming language:", ["Python", "JavaScript", "Java", "C++", "HTML", "CSS", "SQL", "Go", "Ruby"], key="language")
+model = st.selectbox("Select GPT Model:", ["gpt-3.5-turbo", "gpt-4"], key="model")
+temperature = st.slider("Creativity (Temperature):", 0.0, 1.0, 0.2, key="temperature")
+max_tokens = st.slider("Max Tokens:", 100, 4000, 1500, key="max_tokens")
+explain = st.checkbox("Include detailed explanation with complexity analysis", key="explain")
+examples = st.text_area("Enter test input examples (comma-separated):", height=60, key="examples")
+output_format = st.selectbox("Select output format:", ["Raw", "Markdown"], key="output_format")
+execution_timeout = st.slider("Execution Timeout (seconds):", 1, 10, 5, key="execution_timeout")
 
 if 'history' not in st.session_state:
     st.session_state['history'] = []
 
-if st.button("Generate Code"):
+if st.button("Generate Code", key="generate_code"):
     if not prompt.strip():
         st.warning("Please enter a prompt.")
     else:
@@ -133,8 +123,5 @@ if st.button("Generate Code"):
                                 thread.join()
                             else:
                                 st.write(f"Test Case {idx}: Input ({test_input}) ➡️ Output ({output.getvalue().strip()})")
-
-            st.download_button("Export as Markdown", results[-1][1], "solution.md", "text/markdown")
-            st.download_button("Export as HTML", results[-1][1], "solution.html", "text/html")
 
             st.session_state['history'].append({'prompt': prompt, 'category': category, 'solutions': results})
