@@ -46,7 +46,13 @@ model = st.selectbox("Select GPT Model:", ["gpt-3.5-turbo", "gpt-4"], key="model
 temperature = st.slider("Creativity (Temperature):", 0.0, 1.0, 0.2, key="temperature")
 max_tokens = st.slider("Max Tokens:", 100, 4000, 1500, key="max_tokens")
 explain = st.checkbox("Include detailed explanation with complexity analysis", key="explain")
-examples = st.text_area("Enter test input examples (comma-separated):", height=60, key="examples")
+
+try:
+    examples = st.text_area("Enter test input examples (comma-separated):", height=60, key="examples")
+except Exception as e:
+    st.error(f"An error occurred while processing test examples: {str(e)}")
+    examples = ""
+
 output_format = st.selectbox("Select output format:", ["Raw", "Markdown"], key="output_format")
 execution_timeout = st.slider("Execution Timeout (seconds):", 1, 10, 5, key="execution_timeout")
 
