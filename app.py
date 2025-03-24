@@ -47,11 +47,7 @@ temperature = st.slider("Creativity (Temperature):", 0.0, 1.0, 0.2, key="tempera
 max_tokens = st.slider("Max Tokens:", 100, 4000, 1500, key="max_tokens")
 explain = st.checkbox("Include detailed explanation with complexity analysis", key="explain")
 
-try:
-    examples = st.text_area("Enter test input examples (comma-separated):", height=60, key="examples")
-except Exception as e:
-    st.error(f"An error occurred while processing test examples: {str(e)}")
-    examples = ""
+examples = st.text_area("Enter test input examples (comma-separated):", height=100, key="examples")
 
 output_format = st.selectbox("Select output format:", ["Raw", "Markdown"], key="output_format")
 execution_timeout = st.slider("Execution Timeout (seconds):", 1, 10, 5, key="execution_timeout")
