@@ -1,6 +1,6 @@
 # 🛠️ Advanced Interactive Code Generator
 
-This Streamlit application leverages OpenAI's GPT models to automatically generate and evaluate code solutions based on user-defined prompts. It supports multiple programming languages and provides detailed explanations, complexity analysis, and interactive testing capabilities.
+This Streamlit application leverages OpenAI's GPT models to automatically generate, evaluate, and review code solutions based on user-defined prompts. It supports multiple programming languages and provides detailed explanations, complexity analysis, interactive testing capabilities, and automated code reviews.
 
 🔗 **Deployed App:** [https://interactive-code-generation-wjh8zvkapfzm4i9crqpa4b.streamlit.app]
 
@@ -13,6 +13,7 @@ This Streamlit application leverages OpenAI's GPT models to automatically genera
 - **Complexity Analysis:** Each solution explicitly states its time and space complexity.
 - **Problem Difficulty Prediction:** Predicts whether a given problem is Easy, Medium, or Hard.
 - **Interactive Code Testing:** Run your own test cases with execution timeout handling.
+- **Automated Code Review:** Automatically review pasted code to highlight improvements, potential issues, and best practices.
 - **Export Options:** Export solutions in Markdown or HTML formats.
 - **Customizable Output:** Choose between Raw or Markdown formatting.
 - **Accessibility:** Adjustable font size for better readability.
@@ -64,6 +65,7 @@ streamlit run app.py
 3. **Generate and review solutions** with provided complexity analyses.
 4. **Interactively test** generated solutions with custom test cases.
 5. **Export solutions** in the desired format.
+6. **Perform automated code reviews** by pasting your existing code for evaluation.
 
 ---
 
@@ -77,4 +79,3 @@ streamlit run app.py
 ## 📜 License
 
 This project is available under the MIT License.
-
